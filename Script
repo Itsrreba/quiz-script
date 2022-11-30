@@ -1,0 +1,79 @@
+<script>
+        let isUnder65 = true;
+        let makesUnder50 = false;
+
+        $(document).ready(function () {
+            $(".q1-btn").on("click", function () {
+                if ($(this).text() === "Yes") {
+                    isUnder65 = true;
+                } else {
+                    isUnder65 = false;
+                }
+                $("#q1").fadeOut(500);
+                $("#q2").delay(500).fadeIn(500);
+
+                if ($(this).text() === "No") {
+                    makesUnder50 = false;
+                    waitingInfo()
+                    $("#q2").stop(1);
+                    $("#q3").stop(1);
+
+                }
+
+
+            });
+
+            $(".q2-btn").on("click", function () {
+                if ($(this).text() === "Yes") {
+                    makesUnder50 = false;
+                    waitingInfo()
+                    
+                }
+
+                if ($(this).text() === "No") {
+                    makesUnder50 = true;
+                    waitingInfo()
+
+                }
+            });
+        });
+
+        function waitingInfo() {
+            
+            q2.style.display = "none";
+            loading1.style.display = 'block';
+            loading1.classList.add('fade-in');
+            window.setTimeout(function () {
+                loading1.classList.add('fade-out');
+                window.setTimeout(function () {
+                    loading1.style.display = 'none';
+                    loading2.style.display = 'block';
+                    loading2.classList.add('fade-in');
+                    window.setTimeout(function () {
+                        loading2.classList.add('fade-out');
+                        window.setTimeout(function () {
+                            loading2.style.display = 'none';
+                            loading3.style.display = 'block';
+                            loading3.classList.add('fade-in');
+                            window.setTimeout(function () {
+                                loading3.classList.add('fade-out');
+                                window.setTimeout(function () {
+                                    loading3.style.display = 'none';
+                                    if (isUnder65 && makesUnder50) {
+                                        qualify.style.display = 'block';
+                                        qualify.classList.add('fade-in'); $('html, body').stop().animate({ 'scrollTop': $('#qualify').offset().top }, 250, 'swing');
+                                    }
+                                    else {
+                                        dontqualify.style.display = 'block';
+                                        dontqualify.classList.add('fade-in'); $('html, body').stop().animate({ 'scrollTop': $('#dontqualify').offset().top }, 250, 'swing');
+                                    }
+                                    //counting();
+                                }, 300);
+                            }, 1300);
+                        }, 300);
+                    }, 1300);
+                }, 300);
+            }, 1300);
+        }
+
+</script>
