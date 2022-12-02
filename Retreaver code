@@ -1,0 +1,54 @@
+<script type="text/javascript"> (function () {
+    var scriptElement = document.createElement('script');
+    scriptElement.type = 'text/javascript';
+    scriptElement.async = true;
+    scriptElement.defer = true;
+    //A: Swap these next 2 lines out for local testing.
+    // scriptElement.src = 'https://dist.routingapi.com/jsapi/v1/retreaver.min.js';
+    scriptElement.src = document.location.protocol + '//dist.routingapi.com/jsapi/v1/retreaver.min.js';
+    scriptElement.onload = scriptElement.onreadystatechange = function () {
+        Retreaver.configure({
+            host: 'api.routingapi.com',
+            prefix: document.location.protocol == 'https:' ? 'https' : 'http'
+        });
+        //A: Ensure this campaign key matches the one in the Campaign -> Advanced Retrever.js
+        var campaign = new Retreaver.Campaign({campaign_key: '4972cea8d462f4fa827fad09d8ab24d8'});
+
+        campaign.request_number(function (number) {
+                var ip_api_endpoint = 'https://pro.ip-api.com/json/?fields=status,message,countryCode,zip&key=EzULisdhwAznwVU';
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    var customOnClickEvents = '" onclick="'
+                    var customOnClickEventTT = 'ttq.track(\'ClickButton\');'
+                    var customOnClickEventFB = 'fbq(\'trackCustom\', \'tapCall\');'
+                    var customOnClickEventYT = 'dataLayer.push({\'event\': \'tapCall\'});'
+                    if ("ttq" in window) {
+                        customOnClickEvents += customOnClickEventTT
+                    }
+                    if ("fbq" in window) {
+                        customOnClickEvents += customOnClickEventFB
+                    }
+                    if ("dataLayer" in window) {
+                        customOnClickEvents += customOnClickEventYT
+                    }
+
+                    var link = '<a href="tel:' + number.get('number') + customOnClickEvents + '" >' + number.get('formatted_number') + '</a>'
+                    document.getElementById('phone-number').innerHTML = link;
+                    if (this.readyState == 4 && this.status == 200) {
+                        var response = JSON.parse(this.responseText);
+                        if (response.status == 'success') {
+                            number.replace_tags({zip_code: response.zip});
+                        } else {
+                            console.log('query failed: ' + response.message);
+                        }
+                    }
+                };
+                xhr.open('GET', ip_api_endpoint, true);
+                xhr.send();
+            }
+        )
+    };
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(scriptElement);
+})
+();
+</script>
